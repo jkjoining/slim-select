@@ -369,6 +369,7 @@ class Render {
         this.settings = settings;
         this.classes = classes;
         this.callbacks = callbacks;
+        this.lastSelectedOption = null;
         this.main = this.mainDiv();
         this.content = this.contentDiv();
         this.updateClassStyles();
@@ -431,9 +432,10 @@ class Render {
         }
     }
     updateAriaAttributes() {
+        var _a;
         this.main.main.role = 'combobox';
         this.main.main.setAttribute('aria-haspopup', 'listbox');
-        this.main.main.setAttribute('aria-controls', this.content.main.id);
+        this.main.main.setAttribute('aria-controls', (_a = this.content.main.dataset.id) !== null && _a !== void 0 ? _a : '');
         this.main.main.setAttribute('aria-expanded', 'false');
         this.content.main.setAttribute('role', 'listbox');
     }
@@ -1041,7 +1043,7 @@ class Render {
                 optgroupEl.appendChild(optgroupLabel);
                 const optgroupLabelText = document.createElement('div');
                 optgroupLabelText.classList.add(this.classes.optgroupLabelText);
-                optgroupLabelText.textContent = d.label;
+                optgroupLabelText.innerHTML = d.label;
                 optgroupLabel.appendChild(optgroupLabelText);
                 const optgroupActions = document.createElement('div');
                 optgroupActions.classList.add(this.classes.optgroupActions);
@@ -1220,6 +1222,24 @@ class Render {
                 }
                 else {
                     after = before.concat(option);
+                    if (!this.settings.closeOnSelect) {
+                        if (e.shiftKey && this.lastSelectedOption) {
+                            const options = this.store.getDataOptions();
+                            let lastClickedOptionIndex = options.findIndex((o) => o.id === this.lastSelectedOption.id);
+                            let currentOptionIndex = options.findIndex((o) => o.id === option.id);
+                            if (lastClickedOptionIndex >= 0 && currentOptionIndex >= 0) {
+                                const startIndex = Math.min(lastClickedOptionIndex, currentOptionIndex);
+                                const endIndex = Math.max(lastClickedOptionIndex, currentOptionIndex);
+                                const afterRange = options.slice(startIndex, endIndex + 1);
+                                if (afterRange.length > 0 && afterRange.length < this.settings.maxSelected) {
+                                    after = before.concat(afterRange.filter((a) => !before.find((b) => b.id === a.id)));
+                                }
+                            }
+                        }
+                        else if (!option.selected) {
+                            this.lastSelectedOption = option;
+                        }
+                    }
                 }
             }
             if (!this.settings.isMultiple) {
