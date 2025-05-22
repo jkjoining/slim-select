@@ -1010,7 +1010,7 @@ export default class Render {
         // Create label text div element
         const optgroupLabelText = document.createElement('div')
         optgroupLabelText.classList.add(this.classes.optgroupLabelText)
-        optgroupLabelText.textContent = d.label
+        optgroupLabelText.innerHTML = d.label
         optgroupLabel.appendChild(optgroupLabelText)
 
         // Create options container
