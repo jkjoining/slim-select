@@ -1193,10 +1193,18 @@ class Render {
             optionEl.classList.add(this.classes.selected);
             optionEl.setAttribute('aria-selected', 'true');
             this.main.main.setAttribute('aria-activedescendant', optionEl.id);
+            const checkbox = optionEl.querySelector("input[type='checkbox']");
+            if (checkbox) {
+                checkbox.checked = true;
+            }
         }
         else {
             optionEl.classList.remove(this.classes.selected);
             optionEl.setAttribute('aria-selected', 'false');
+            const checkbox = optionEl.querySelector("input[type='checkbox']");
+            if (checkbox) {
+                checkbox.checked = false;
+            }
         }
         optionEl.addEventListener('click', (e) => {
             e.preventDefault();

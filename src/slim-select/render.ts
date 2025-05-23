@@ -520,7 +520,7 @@ export default class Render {
       // Create delete div element
       const deleteDiv = document.createElement('div')
       deleteDiv.classList.add(this.classes.valueDelete)
-      deleteDiv.setAttribute('tabindex', '0')  // Make the div focusable for tab navigation
+      deleteDiv.setAttribute('tabindex', '0') // Make the div focusable for tab navigation
 
       // Add delete onclick event
       deleteDiv.onclick = (e: Event) => {
@@ -592,7 +592,7 @@ export default class Render {
       // Add keydown event listener for keyboard navigation (Enter key)
       deleteDiv.onkeydown = (e) => {
         if (e.key === 'Enter') {
-          deleteDiv.click()  // Trigger the click event when Enter is pressed
+          deleteDiv.click() // Trigger the click event when Enter is pressed
         }
       }
     }
@@ -1235,9 +1235,17 @@ export default class Render {
       optionEl.classList.add(this.classes.selected)
       optionEl.setAttribute('aria-selected', 'true')
       this.main.main.setAttribute('aria-activedescendant', optionEl.id)
+      const checkbox = optionEl.querySelector("input[type='checkbox']") as HTMLInputElement | null
+      if (checkbox) {
+        checkbox.checked = true
+      }
     } else {
       optionEl.classList.remove(this.classes.selected)
       optionEl.setAttribute('aria-selected', 'false')
+      const checkbox = optionEl.querySelector("input[type='checkbox']") as HTMLInputElement | null
+      if (checkbox) {
+        checkbox.checked = false
+      }
     }
 
     // Add click event listener
